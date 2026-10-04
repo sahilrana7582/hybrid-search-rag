@@ -1,13 +1,12 @@
 import re
 
+from app.retrieval.tokenizer.base import BaseTokenizer
 
-class Tokenizer:
-    _TOKEN_PATTERN = re.compile(r"[A-Za-z0-9]+(?:[._:+-][A-Za-z0-9]+)*")
+
+class RegexTokenizer(BaseTokenizer):
+    # \w+ matches letters (any language), digits and "_".
+    # The optional group keeps things like gpt-4, v1.2.3 and 10:30 as one token.
+    _TOKEN_PATTERN = re.compile(r"\w+(?:[.:+-]\w+)*")
 
     def tokenize(self, text: str) -> list[str]:
-        if not text:
-            return []
- 
-        text = text.lower()
-
-        return self._TOKEN_PATTERN.findall(text)
+        return self._TOKEN_PATTERN.findall(text.lower())
